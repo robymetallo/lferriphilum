@@ -15,8 +15,7 @@
 module load bioinfo-tools
 module load Kraken2
 
-
-# IN_DIR="$HOME/prj/data/raw_data/DNA_raw_data"
+# Input/Output Dir
 IN_DIR="$HOME/prj/data/raw_data/reference"
 OUT_DIR="$HOME/prj/data/DNA_data/kraken2"
 
@@ -26,10 +25,8 @@ MY_DB=$MY_DB_DIR/${KRAKEN2_DEFAULT_DB##*/}
 mkdir -p $MY_DB
 cp -av $KRAKEN2_DEFAULT_DB/* $MY_DB/
 
-# Custom settings:
-
-# IN_FILES="ERR2028*.fastq.gz"
-IN_FILES="OBMB01.fasta"
+# Settings:
+IN_FILES="ERR2028*.fastq.gz"
 
 # Kraken2 2.0.7-beta-bc14b13
 kraken2 --threads 5 $IN_DIR/$IN_FILES

@@ -11,10 +11,15 @@
 # This script assembles a genome with canu
 # using the reads from fastq.gz files
 
+# Load modules
+module load bioinfo-tools
+module load canu
+
+# Input/Output Dir
 IN_DIR="$HOME/prj/data/raw_data/DNA_raw_data"
 OUT_DIR="$HOME/prj/data/DNA_data/assembly"
 
-# Custom settings:
+# Settings:
 PREFIX="LSP_ferriphilum"                # File name prefix of intermediate and output files
 GENOME_SIZE="2.6m"                      # Expected genome size
 STOP_ON_RQ="false"                      # stopOnReadQuality - Don't stop assembly
