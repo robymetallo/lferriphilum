@@ -4,15 +4,15 @@
 #SBATCH -p core
 #SBATCH -n 2
 #SBATCH -t 12:00:00
-#SBATCH -J canu_l_ferriphilum_genome_assembly
+#SBATCH -J canu_l_ferriphilum
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user robymetallo@users.noreply.github.com
 
 # This script assembles a genome with canu
 # using the reads from fastq.gz files
 
-IN_DIR="$HOME/prj/0_data/raw_data/DNA_raw_data"
-OUT_DIR="$HOME/prj/prj/0_daata/assembly"
+IN_DIR="$HOME/prj/data/raw_data/DNA_raw_data"
+OUT_DIR="$HOME/prj/data/DNA_data/assembly"
 
 # Custom settings:
 PREFIX="LSP_ferriphilum"                # File name prefix of intermediate and output files
@@ -24,7 +24,10 @@ CORR_ERR_RATE="0.040"                   # Improves assembly speed without affect
 IN_FILES="ERR2028*.fastq.gz"            # This expression will be expanded to all fastq.gz
                                         # files in a directory
 
-canu -p $PREFIX genomeSize=$GENOME_SIZE \
--d $OUT_DIR stopOnReadQuality=$STOP_ON_RQ \
-correctedErrorRate=$CORR_ERR_RATE -pacbio-raw \
-$IN_DIR/$IN_FILES
+canu -p $PREFIX \
+   genomeSize=$GENOME_SIZE \
+   stopOnReadQuality=$STOP_ON_RQ \
+   correctedErrorRate=$CORR_ERR_RATE \
+   -d $OUT_DIR \
+   -pacbio-raw $IN_DIR/$IN_FILES
+
