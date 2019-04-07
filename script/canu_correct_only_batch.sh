@@ -17,7 +17,7 @@ module load canu
 
 # Input/Output Dir
 IN_DIR="$HOME/prj/data/raw_data/DNA_raw_data"
-OUT_DIR="$HOME/prj/data/DNA_data/assembly"
+OUT_DIR="$HOME/prj/data/DNA_data/corrected_reads"
 
 # Settings:
 PREFIX="LSP_ferriphilum"                # File name prefix of intermediate and output files
@@ -29,11 +29,12 @@ CORR_ERR_RATE="0.040"                   # Improves assembly speed without affect
 IN_FILES="ERR2028*.fastq.gz"            # This expression will be expanded to all fastq.gz
                                         # files in a directory
 
-canu -p $PREFIX \
-   genomeSize=$GENOME_SIZE \
-   stopOnReadQuality=$STOP_ON_RQ \
-   correctedErrorRate=$CORR_ERR_RATE \
-   -d $OUT_DIR \
-   -pacbio-raw $IN_DIR/$IN_FILES
+# This script was run locally using canu 1.8
+command time -v canu -correct -p $PREFIX \
+             genomeSize=$GENOME_SIZE \
+             stopOnReadQuality=$STOP_ON_RQ \
+             correctedErrorRate=$CORR_ERR_RATE \
+             -d $OUT_DIR \
+             -pacbio-raw $IN_DIR/$IN_FILES
 
 sleep 30s && exit

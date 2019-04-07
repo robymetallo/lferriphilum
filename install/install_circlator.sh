@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# IMPORTANT: Make sure you don't have any module loaded when running this script
+# The easiest way to ensure this, is to execute this script on a fresh shell
+
 # Creating an array of the modules required to install and run circlator
 # NOTE: The authors advise using spades 3.7.1,
 #       which is not available on UPPMAX
@@ -41,8 +44,3 @@ done
 
 # Test circlator
 circlator progcheck
-
-# Add minimus2 to path
-
-cp "/sw/apps/bioinfo/AMOS/3.1.0/milou/bin/minimus2.acf" $HOME"/bin/minimus2"
-chmod 700 $HOME"/bin/minimus2"
