@@ -1,6 +1,9 @@
-# Don't upload data
-analysis/
-data/
+# Symlinks to data
+analysis
+data
+
+# slurm logs
+slurm-*.out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
