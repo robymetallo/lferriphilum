@@ -2,7 +2,7 @@
 
 #SBATCH -A ***REMOVED***
 #SBATCH -p core
-#SBATCH -n 2
+#SBATCH -n 6
 #SBATCH -t 01:00:00
 #SBATCH -J kraken2_l_ferriphilum
 #SBATCH --mail-type=ALL
@@ -22,10 +22,10 @@ OUT_DIR="$HOME/prj/data/DNA_data/kraken2"
 IN_FILES="ERR2028*.fastq.gz"
 REPORT_FILE="lferriphilum_kraken2.report"
 OUT_FILE="lferriphilum_kraken2.out"
-CLASS_FILE="lferriphilum_kraken2_classified.fasq"
-UNCLASS_FILE="lferriphilum_kraken2_classified.fastq"
+CLASS_FILE="lferriphilum_kraken2_classified.fastq"
+UNCLASS_FILE="lferriphilum_kraken2_unclassified.fastq"
 
-# Copy Kraken2 DB on local node
+# Copy Kraken2 DB to local node
 MY_DB_DIR=$SNIC_TMP/Kraken2
 MY_DB=$MY_DB_DIR/${KRAKEN2_DEFAULT_DB##*/}
 mkdir -p $MY_DB
@@ -33,8 +33,7 @@ cp -av $KRAKEN2_DEFAULT_DB/* $MY_DB/
 
 
 # Kraken2 2.0.7-beta-bc14b13
-kraken2 --threads 2 \
-        --memory-mapping \
+kraken2 --threads 6 \
         --db $MY_DB \
         --report $OUT_DIR/$REPORT_FILE \
         --output $OUT_DIR/$OUT_FILE \
