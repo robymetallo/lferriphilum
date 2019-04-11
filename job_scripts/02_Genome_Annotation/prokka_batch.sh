@@ -23,7 +23,7 @@ OUT_DIR="$HOME/prj/data/DNA_data/prokka"
 
 # Prokka v1.12-12547ca
 
-prokka --cpus 4
+prokka --cpus 4 \
        --gram neg \
        --genus Leptospirillum \
        --usegenus \
