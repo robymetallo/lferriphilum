@@ -17,7 +17,7 @@ module load quast
 
 # Input/Output Dir
 IN_DIR="$HOME/prj/data/DNA_data/assembly"
-OUT_POL_DIR="$HOME/prj/data/DNA_data/QUAST"
+OUT_DIR="$HOME/prj/data/DNA_data/QUAST"
 
 # Settings:
 REFERENCE="$HOME/prj/data/raw_data/reference/OBMB01.fasta"
@@ -44,10 +44,3 @@ python3 $QUAST_PATH \
         -o $OUT_DIR/main \
         -r $REFERENCE \
         $CONTIG_MAIN
-
-python3 quast.py -o $HOME/Bioinformatics_data/data/DNA_data/QUAST/polished \
-         -t 4 \
-         --glimmer \
-         -r $HOME/Bioinformatics_data/data/raw_data/reference/OBMB01.fasta \
-         "$HOME/Bioinformatics_data/analysis/LSP_ferriphilum_polished.contigs.fasta"
-

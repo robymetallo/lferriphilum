@@ -2,8 +2,8 @@
 
 #SBATCH -A ***REMOVED***
 #SBATCH -p core
-#SBATCH -n 4
-#SBATCH -t 00:00:00
+#SBATCH -n 2
+#SBATCH -t 06:00:00
 #SBATCH -J trimmomatic_l_ferriphilum
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user robymetallo@users.noreply.github.com
@@ -15,13 +15,15 @@ module load bioinfo-tools
 module load trimmomatic
 
 # Input/Output Dir
-IN_DIR="$HOME/prj/input"
-OUT_DIR="$HOME/prj/output"
+IN_DIR="$HOME/prj/data/raw_data/RNA_raw_data"
+OUT_DIR="$HOME/prj/data/RNA_data/trimmomatic"
+IN_FILES="ERR2*_1.fastq.gz"
+TMP_DIR=$SNIC_TMP/trimmomatic
 
 # ILLUMINACLIP settings
 # ILLUMINACLIP:<fastaWithAdaptersEtc>:<seed mismatches>:
 #              <palindrome clip threshold>:<simple clip threshold>
-ADAPTERS="TruSeq3-PE.fa"
+ADAPTERS="/sw/apps/bioinfo/trimmomatic/0.36/rackham/adapters/TruSeq3-PE-2.fa"
 SEED="2"         # Look for seed matches (16nt) allowing maximally 2 mismatches
 PE_THRESH="30"   # Extend and clip PE reads only if a score of 30 is reached (about 50nt)
 SE_THRESH="10"   # Extend and clip SE reads only if a score of 10 is reached (about 17nt)
@@ -47,13 +49,42 @@ RM_TRAILING="3"
 SW_GLOBAL="4:15"
 MINLEN="36"
 
+# Create tmp output dir
+mkdir -p $TMP_DIR
+
+# File name processing
+PE_EXT1="_1.fastq.gz"
+PE_EXT2="_2.fastq.gz"
+
 # Trimmomatic v0.36
-trimmomatic -threads 4 \
-            input \
-            output \
-            ILLUMINACLIP:$ADAPTER:$SEED:$PE_THRESH:$SE_TRESH \
-            MAXINFO:$TARGET_LEN:$STRICTNESS \
-            LEADING:$RM_LEADING \
-            TRAILING:$RM_TRAILING \
-            SLIDINGWINDOW:$SW_GLOBAL \
-            MINLEN:$MINLEN
+for FILE in $IN_DIR/$IN_FILES;
+do
+   BASE_NAME=`basename $FILE | cut -d "_" -f 1`
+   WD=$OUT_DIR/$BASE_NAME
+   TMP_WD=$TMP_DIR/$BASE_NAME
+   FWD_FASTQ=$IN_DIR/$BASE_NAME$PE_EXT1
+   REV_FASTQ=$IN_DIR/$BASE_NAME$PE_EXT2
+   mkdir -p $TMP_WD
+   mkdir -p $WD
+   trimmomatic PE \
+               -threads 2 \
+               -basein $FWD_FASTQ $REV_FASTQ \
+               -baseout $TMP_WD \
+               -summary $WD/$BASE_NAME.summary \
+               -validatePairs \
+               ILLUMINACLIP:$ADAPTER:$SEED:$PE_THRESH:$SE_TRESH \
+               MAXINFO:$TARGET_LEN:$STRICTNESS \
+               LEADING:$RM_LEADING \
+               TRAILING:$RM_TRAILING \
+               SLIDINGWINDOW:$SW_GLOBAL \
+               MINLEN:$MINLEN
+
+   # Compress FASTQ files using pbzip2
+   for TMP_FILE in $TMP_WD;
+      do
+         OUT_BASE_NAME=`basename $TMP_FILE`
+         pbzip2 --keep -v -p2 -c < $TMP_FILE > $WD/$OUT_BASE_NAME.fastq.bz2
+   done;
+   rm $TMP_FILE
+
+done;

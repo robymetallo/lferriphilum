@@ -30,5 +30,3 @@ prokka --cpus 4 \
        --rfam \
        -o $OUT_DIR \
        $CONTIG
-
-

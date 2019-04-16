@@ -35,5 +35,3 @@ canu -p $PREFIX \
    correctedErrorRate=$CORR_ERR_RATE \
    -d $OUT_DIR \
    -pacbio-raw $IN_DIR/$IN_FILES
-
-sleep 30s && exit
