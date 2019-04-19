@@ -5,6 +5,9 @@ data
 # slurm logs
 slurm-*.out
 
+# vscode settings
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
