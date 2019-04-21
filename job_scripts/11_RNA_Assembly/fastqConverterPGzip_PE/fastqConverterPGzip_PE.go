@@ -22,11 +22,28 @@ type cmdArgs struct {
 
 func parseArgs() cmdArgs {
 	var args cmdArgs
-	flag.StringVar(&args.inputFile, "input", ".", "Path to input file")
+	flag.StringVar(&args.inputFile, "input", "Null", "Path to input file")
 	flag.IntVar(&args.compressionLevel, "lvl", 6, "Specify gzip compression level (0-9)")
 	flag.Parse()
 
 	return args
+}
+
+func converterSTDIO() {
+	s := bufio.NewScanner(os.Stdin)
+	re := regexp.MustCompile(`(^@ERR\d{7}.\d+)(.*)(\/[12])`)
+	for s.Scan() {
+		line := s.Text()
+		if err := s.Err(); err != nil {
+			log.Fatal(err)
+		}
+		if match := re.FindStringSubmatch(line); match != nil {
+			// fmt.Println(match)
+			fmt.Println(match[1] + match[3])
+		} else {
+			fmt.Println(line)
+		}
+	}
 }
 
 func converter(fileName string, compressionLevel int) {
@@ -68,7 +85,7 @@ func converter(fileName string, compressionLevel int) {
 		}
 		// log.Println(line)
 		if match := re.FindStringSubmatch(line); match != nil {
-			w.Write([]byte(match[0] + match[2] + "\n"))
+			w.Write([]byte(match[1] + match[3] + "\n"))
 			i++
 			if i%1e6 == 0 {
 				rate := float32(i-readsT) / float32(time.Now().Sub(t1)/time.Millisecond)
@@ -87,11 +104,14 @@ func converter(fileName string, compressionLevel int) {
 
 func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	re := regexp.MustCompile(`ERR\d{7}_[12].fastq.gz`)
-
+	re := regexp.MustCompile(`.fastq.gz`)
 	args := parseArgs()
+	if args.inputFile == "Null" {
+		converterSTDIO()
+		return
+	}
 	fmt.Println("Path:", args.inputFile)
-	fileList, err := filepath.Glob(filepath.Join(args.inputFile, "/ERR*.fastq.gz"))
+	fileList, err := filepath.Glob(filepath.Join(args.inputFile, "/*.fastq.gz"))
 	if err != nil {
 		log.Fatal(err)
 	}

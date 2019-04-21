@@ -4,7 +4,7 @@
 #SBATCH -p core
 #SBATCH -n 4
 #SBATCH -t 2:00:00
-#SBATCH -J fast_qc_l_ferriphilum
+#SBATCH -J FastQC_LFerr
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user robymetallo@users.noreply.github.com
 
@@ -16,7 +16,7 @@ module load FastQC
 
 # Input/Output Dir
 IN_DIR="$HOME/prj/data/raw_data/RNA_raw_data/"
-OUT_DIR="$HOME/prj/data/RNA_data/fastqc"
+OUT_DIR="$HOME/prj/data/RNA_data/FastQC"
 
 # Init operations
 RAW_READS="ERR2*.fastq.gz"

@@ -56,21 +56,17 @@ kraken2-build --threads 4 --build --db nitrospirae
 kraken2-build --threads 4 --build --db proteobacteria
 kraken2-build --threads 4 --build --db nitro_and_proteo
 
-# Build Bacteria DB on Rackham
+# Build Human DB on Rackham
 mkdir $SNIC_TMP/kraken2_DB && cd $SNIC_TMP/kraken2_DB
-mkdir bacteria && cd bacteria
+mkdir -p human/library
 module load bioinfo-tools
 module load Kraken2
 
-# Copy bacteria library and NCBI taxonomy
-cp -r $KRAKEN2_DEFAULT_DB/library/bacteria $SNIC_TMP/kraken2_DB/bacteria/library
-cp -r $KRAKEN2_DEFAULT_DB/taxonomy $SNIC_TMP/kraken2_DB/bacteria
+# Copy human library and ferch NCBI taxonomy
+cp -r $KRAKEN2_DEFAULT_DB/library/human $SNIC_TMP/kraken2_DB/human/library
+cd $SNIC_TMP/kraken2_DB && wget http://refdb.s3.climb.ac.uk/k2_taxonomy_20190409.tar.gz
+tar xvz k2_taxonomy_20190409.tar.gz -C taxonomy
 
-cd $SNIC_TMP/kraken2_DB && kraken2-build --threads 6 --build --db bacteria
-
-# Kraken will complain with the following message:
-# Building database files (step 3)...
-# build_db: OMP only wants you to use 1 threads
-# xargs: cat: terminated by signal 13
-# Just tun this step on one thread
-kraken2-build --build --db bacteria
+# Using multiple threads gives an error... so build the DB using only one core
+cd $SNIC_TMP/kraken2_DB && kraken2-build --build --db human
+mv $SNIC_TMP/kraken2_DB ~/private

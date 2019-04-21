@@ -8,6 +8,10 @@ slurm-*.out
 # vscode settings
 .vscode/
 
+# pictures
+*.jpeg
+*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

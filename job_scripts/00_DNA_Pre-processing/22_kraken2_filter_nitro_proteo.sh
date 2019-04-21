@@ -1,33 +1,16 @@
 #!/bin/bash -l
 
-#SBATCH -A ***REMOVED***
-#SBATCH -p core
-#SBATCH -n 6
-#SBATCH -t 00:15:00
-#SBATCH --qos=short
-#SBATCH -J kraken2_l_ferriphilum
-#SBATCH --mail-type=ALL
-#SBATCH --mail-user robymetallo@users.noreply.github.com
-
-
-# Load modules
-module load bioinfo-tools
-module load Kraken2
-
 # Input/Output Dir
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/01_processed_reads/DNA"
+IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/trimmed_reads"
 OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/kraken2/02_corr_reads_filter_nitro_proteo"
-# TMP_OUT_DIR=$SNIC_TMP/kraken2_output
 
 MY_DB="$HOME/Bioinformatics_data/krakenDB/nitro_and_proteo"
-IN_FILES="01_trimmed_reads.bz2"
-REPORT_FILE="lferriphilum_kraken2_nitro_and_proteo.report"
-# OUT_FILE="lferriphilum_kraken2_nitro_and_proteo.out"
-CLASS_FILE="lferriphilum_kraken2_nitro_and_proteo_classified.fastq"
-UNCLASS_FILE="lferriphilum_kraken2_nitro_and_proteo_unclassified.fastq"
+IN_FILES="LFerr.trimmedReads.fasta.gz"
+REPORT_FILE="LFerr_nitro_and_proteo_kraken2.report"
+CLASS_FILE="LFerr_nitro_and_proteo_classified.fastq"
+UNCLASS_FILE="LFerr_nitro_and_proteo_unclassified.fastq"
 
-# Create temp output directory
-# mkdir -p $TMP_OUT_DIR
+mkdir -p $OUT_DIR
 
 # Kraken2 2.0.7-beta-bc14b13
 command time -v \
@@ -40,29 +23,31 @@ kraken2 --threads 4 \
         $IN_DIR/$IN_FILES
 
 # Compress FASTQ files using pbzip2
-
-# pbzip2 --keep -v -p6 -m2000 -c < $OUT_DIR/$OUT_FILE > $OUT_DIR/$OUT_FILE.bz2
-pbzip2 --keep -v -p4 -m2000 -c < $OUT_DIR/$CLASS_FILE > $OUT_DIR/$CLASS_FILE.bz2
-pbzip2 --keep -v -p4 -m2000 -c < $OUT_DIR/$UNCLASS_FILE > $OUT_DIR/$UNCLASS_FILE.bz2
-
+pbzip2 -v -p4 -m2000 -c < $OUT_DIR/$CLASS_FILE > $OUT_DIR/$CLASS_FILE.bz2
+pbzip2 -v -p4 -m2000 -c < $OUT_DIR/$UNCLASS_FILE > $OUT_DIR/$UNCLASS_FILE.bz2
+rm $OUT_DIR/$CLASS_FILE && rm $OUT_DIR/$UNCLASS_FILE
 
 
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/kraken2/02_corr_reads_filter_nitro_proteo"
+WD=$OUT_DIR
 MY_DB="$HOME/Bioinformatics_data/krakenDB/human"
-IN_FILES="lferriphilum_kraken2_nitro_and_proteo_unclassified.fastq.bz2"
-REPORT_FILE="lferriphilum_kraken2_human_on_unclassified.report"
-UNCLASS_FILE="lferriphilum_kraken2_human_on_unclassified.fastq"
+IN_FILES=$UNCLASS_FILE.bz2
+REPORT_FILE="LFerr_human_on_unclass_kraken2.report"
+UNCLASS_FILE="LFerr_human_on_unclass_unclassified.fastq"
 
+# Kraken2 2.0.7-beta-bc14b13
 command time -v \
 kraken2 --threads 4 \
         --db $MY_DB \
-        --report $OUT_DIR/$REPORT_FILE \
+        --report $WD/$REPORT_FILE \
         --output /dev/null \
-        --unclassified-out $OUT_DIR/$UNCLASS_FILE \
-        $IN_DIR/$IN_FILES
+        --unclassified-out $WD/$UNCLASS_FILE \
+        $WD/$IN_FILES
 
-pbzip2 --keep -v -p4 -m2000 -c < $OUT_DIR/$UNCLASS_FILE > $OUT_DIR/$UNCLASS_FILE.bz2
+pbzip2 --keep -v -p4 -m2000 -c < $WD/$UNCLASS_FILE > $WD/$UNCLASS_FILE.bz2
+rm $WD/$UNCLASS_FILE
 
-bzcat $OUT_DIR/lferriphilum_kraken2_nitro_and_proteo_classified.fastq.bz2 \
-$OUT_DIR/lferriphilum_kraken2_human_on_unclassified.fastq.bz2 | pbzip2 -c -p4 -m2000 \
-> $OUT_DIR/lferriphilum_kraken2_decontaminated.fastq.bz2
+FINAL_OUT="LFerr_decontaminated.fastq.bz2"
+
+bzcat $WD/$CLASS_FILE.bz2 \
+$WD/$UNCLASS_FILE.bz2 | pbzip2 -c -p4 -m2000 \
+> $WD/$FINAL_OUT

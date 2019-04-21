@@ -28,13 +28,12 @@ REV_READS="LFer_RNA-Seq_REV_clumped_norm_converted.fastq.bz2"
 mkdir -p $TMP_OUT
 
 # Trinity v2.8.2
-command time -v Trinity --seqType fq --max_memory 60G  \
+command time -v Trinity --seqType fq --max_memory 64G  \
                 --left $IN_DIR/$FWD_READS \
                 --right $IN_DIR/$REV_READS \
                 --output $TMP_OUT \
                 --CPU 10 \
-                --bflyHeapSpaceMax 20G \
-                --bflyCalculateCPU \
+                --no_normalize_reads \
                 2>&1 | tee $OUT_DIR/Trinity_tee.log
 
 cp -r $TMP_OUT/*Trinity.fasta $OUT_DIR/

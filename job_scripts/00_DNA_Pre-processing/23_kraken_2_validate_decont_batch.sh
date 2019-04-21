@@ -15,15 +15,16 @@ module load bioinfo-tools
 module load Kraken2
 
 # Input/Output Dir
-IN_DIR="$HOME/prj/data/DNA_data/trimmed_reads"
-OUT_DIR="$HOME/prj/data/DNA_data/kraken2/01_corr_reads"
+WD="$HOME/prj/data/DNA_data/kraken2/02_corr_reads_filter_nitro_proteo"
 
-IN_FILES="LFerr.trimmedReads.fasta.gz"
-REPORT_FILE="LFerr_trimmed_reads_kraken2.report"
+IN_FILES="LFerr_decontaminated.fastq.bz2"
+REPORT_FILE="LFerr_validate_decont_procedure_kraken2.report"
+
+mkdir -p $WD
 
 # Kraken2 2.0.7-beta-bc14b13
 command time -v \
 kraken2 --threads 6 \
-        --report $OUT_DIR/$REPORT_FILE \
+        --report $WD/$REPORT_FILE \
         --output /dev/null \
-        $IN_DIR/$IN_FILES
+        $WD/$IN_FILES

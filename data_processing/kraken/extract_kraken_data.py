@@ -2,6 +2,7 @@ import numpy as np
 import glob
 import os.path
 import matplotlib.pyplot as plt
+import sys
 
 
 def extract_significant_data(input_file):
@@ -16,9 +17,7 @@ def extract_significant_data(input_file):
     return polished_table
 
 
-def plot(data, bins):
-
-    plot_name = "Kraken2_reads_by_Phylum.png"
+def plot(data, bins, plot_name):
     width = 0.35
     bot_coord = 0
     for key, value in data.items():
@@ -28,7 +27,7 @@ def plot(data, bins):
     plt.legend()
     plt.xlabel("Samples", fontsize=14)
     plt.ylabel("Frequency (%)", fontsize=14)
-    plt.title("Kraken2: Classified Reads by Phylum", fontsize=18)
+    plt.title("Kraken2: Classified RAW Reads", fontsize=18)
     plt.yticks(np.arange(0, 75, 5), fontsize=12)
     plt.xticks(rotation=35, fontsize=10)
     plt.tight_layout
@@ -38,8 +37,13 @@ def plot(data, bins):
 
 
 def main():
-    input_dir = "$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/kraken2/single_sample/"
-    file_glob = "ERR*.report"
+    """Usage: This scripts requires 2 arguments:
+       1. Path to the directory with Kraken2's report files;
+       2. Path to output (plot);"""
+
+    input_dir = sys.argv[1]
+    plot_name = sys.argv[2]
+    file_glob = "*.report"
     d = dict()
     input_list = glob.glob(input_dir + file_glob)
     bins = []
@@ -53,7 +57,7 @@ def main():
             else:
                 d[key] = np.array(val)
     print(d)
-    plot(d, bins)
+    plot(d, bins, plot_name)
 
 
 main()

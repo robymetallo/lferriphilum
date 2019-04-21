@@ -4,13 +4,15 @@
 #SBATCH -p core
 #SBATCH -n 2
 #SBATCH -t 00:15:00
-#SBATCH -J MUMmer4_lferriphilum
+#SBATCH --qos=short
+#SBATCH -J MUMmer4_LFerr
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user robymetallo@users.noreply.github.com
-#SBATCH --qos=short
 
-# This script runs MUMmer4 to evaluate the assembly produced by canu
-  
+
+# FIX ME: MUMMERPLOT NOT WORKING AT ALL!
+
+
 # Load modules
 module load bioinfo-tools
 module load MUMmer/4.0.0beta2
@@ -23,7 +25,6 @@ REFERENCE="$HOME/prj/data/raw_data/reference/OBMB01.fasta"
 CONTIGS="$HOME/prj/analysis/02_contigs/*.fasta"
 
 # MUMmer/4.0.0beta2
-
 for CONTIG in $CONTIGS; do
    WD=${CONTIG#*_LFerr_}
    BASE_NAME=`basename $WD .fasta`
