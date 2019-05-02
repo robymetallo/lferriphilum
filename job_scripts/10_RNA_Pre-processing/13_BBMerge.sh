@@ -1,18 +1,24 @@
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk/merged"
-OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBMerge"
+#!/bin/bash
 
-FWD_IN="LFer_RNA-Seq_FWD_clumped.fastq.bz2"
-REV_IN="LFer_RNA-Seq_REV_clumped.fastq.bz2"
-OUT_MERGED="LFer_RNA-Seq_FWD_clumped_merged.fastq.bz2"
-REV_OUT_MERGED="LFer_RNA-Seq_REV_clumped_merged.fastq.bz2"
-REV_OUT_UNMERGED="LFer_RNA-Seq_REV_clumped_unmerged.fastq.bz2"
+IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk/dedup"
 
-bbmerge-auto.sh in=$IN_DIR/$FWD_IN in2=$IN_DIR/$REV_IN \
-                out=$OUT_DIR/$OUT_MERGED \
-                outu=$OUT_DIR/$FWD_OUT_UNMERGED outu2=$OUT_DIR/$REV_OUT_UNMERGED \
-                rem k=62 \
-                extend2=50 \
-                ecct \
-                verystrict \
-                -Xmx12g \
-                2>&1 | tee $OUT_DIR/BBMerge_tee.log
+FWD_IN="_OK_1.fastq.gz"
+REV_IN="_OK_2.fastq.gz"
+
+for FILE in `find $IN_DIR -type f -name '*_dedup_OK_1.fastq.gz'`
+do
+   BASE_NAME=`basename $FILE _dedup_OK_1.fastq.gz`
+   WD=`dirname $FILE`
+
+   bbmerge-auto.sh in=$WD/$BASE_NAME"_dedup_OK_1.fastq.gz" \
+                   in2=$WD/$BASE_NAME"_dedup_OK_2.fastq.gz" \
+                   out=$WD/$BASE_NAME"_merged.fastq.gz" \
+                   outu=$WD/$BASE_NAME"_FWD_unmerged.fastq.gz" \
+                   outu2=$WD/$BASE_NAME"_REV_unmerged.fastq.gz" \
+                   rem k=62 \
+                   extend2=50 \
+                   ecct \
+                   verystrict \
+                   -Xmx12g \
+                   2>&1 | tee $WD/BBMerge_tee.log
+done;

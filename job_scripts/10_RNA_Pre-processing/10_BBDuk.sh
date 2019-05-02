@@ -1,21 +1,21 @@
 #!/bin/bash
 
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/raw_data/RNA_raw_data/bzip2"
+IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/raw_data/RNA_raw_data"
 OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk"
-IN_FILES="ERR2*_1.fastq.bz2"
+IN_FILES="ERR2*_1.fastq.gz"
 
-PE_EXT1="_1.fastq.bz2"
-PE_EXT2="_2.fastq.bz2"
+PE_EXT1="_1.fastq.gz"
+PE_EXT2="_2.fastq.gz"
 
-O1="_OK_1.fastq.bz2"
-O2="_OK_2.fastq.bz2"
-F1="_F_1.fastq.bz2"
-F2="_F_2.fastq.bz2"
-SI="_singletons.fastq.bz2"
+O1="_OK_1.fastq.gz"
+O2="_OK_2.fastq.gz"
+F1="_F_1.fastq.gz"
+F2="_F_2.fastq.gz"
+SI="_singletons.fastq.gz"
 STATS_1="_contaminants.report"
 STATS_2="_ref.report"
 
-# Trimmomatic v0.39
+# BBDuk
 for FILE in $IN_DIR/$IN_FILES;
 do
    BASE_NAME=`basename $FILE | cut -d "_" -f 1`
