@@ -32,3 +32,6 @@ done;
 
 # Tee usage
 program 2>&1 | tee program.log
+
+# Copy files that match a pattern
+find . -type f -name '*key*' -exec cp '{}' dst/ ';'
