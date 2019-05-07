@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 # Input/Output Dir
-CONTIG="$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/02_contigs/12_LFerr_without_contaminants_main_contig.fasta"
+CONTIG="$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/02_contigs/20_LFerr_genome_assembly_final.fasta"
 OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/prokka/"
 
 # --usegenus   Use genus-specific BLAST databases

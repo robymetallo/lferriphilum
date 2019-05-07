@@ -16,7 +16,7 @@ module load bwa/0.7.17
 module load samtools/1.9
 
 # Input/Output Dir
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_dedup/"
+IN_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/02_unmerged"
 OUT_DIR="$HOME/prj/data/RNA_data/BWA/singletons"
 TMP_DIR=$SNIC_TMP/BWA
 
