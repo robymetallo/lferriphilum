@@ -5,8 +5,9 @@ data
 # slurm logs
 slurm-*.out
 
-# vscode settings
+# Varoius stuff
 .vscode/
+*.cmds
 
 # pictures
 *.jpeg
