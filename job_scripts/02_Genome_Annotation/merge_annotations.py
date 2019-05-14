@@ -5,6 +5,7 @@ prokka_fasta = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_an
 eggNOG_ann = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/eggNOG-mapper/LFerr.ffn.emapper.annotations"
 output_name = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/LFerr_merget.ffn"
 
+
 def read_csv():
     eggNOG_annotation = {}
     with open(eggNOG_ann) as csvfile:
@@ -21,8 +22,8 @@ def main():
         for record in prokka_annotation:
             if record.id in eggNOG_annotation.keys():
                 record.description = (f"Prokka: {record.description.lstrip(record.id)}" +
-                                        f"; eggNOG[{eggNOG_annotation[record.id][0]}]: " +
-                                        f"{eggNOG_annotation[record.id][1]}")
+                                      f"; eggNOG[{eggNOG_annotation[record.id][0]}]: " +
+                                      f"{eggNOG_annotation[record.id][1]}")
             SeqIO.write(record, out_fasta, "fasta")
 
 
