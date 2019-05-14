@@ -31,7 +31,7 @@ hisat2 --no-spliced-alignment \
        --met-file $OUT_DIR"/histat2_coverage.log" \
        --met 5 \
        --new-summary \
-       --threads 4 \
+       --threads $(nproc) \
        --dta \
        --time \
        -I 350 \

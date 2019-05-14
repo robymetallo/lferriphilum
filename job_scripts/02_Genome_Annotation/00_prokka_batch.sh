@@ -9,7 +9,7 @@ OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/prokka/"
 PREFIX="LFerr"
 
 # Prokka v1.13.3
-prokka --cpus 4 \
+prokka --cpus $(nproc) \
        --gram neg \
        --genus Leptospirillum \
        --usegenus \

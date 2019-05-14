@@ -25,7 +25,7 @@ mkdir -p $OUT_DIR
 python $BUSCO -i $TRANS_ASSEMBLY \
                 -o $PREFIX \
                 -l $DB \
-                -c 4 \
+                -c $(nproc) \
                 --mode tran \
                 --long \
                 --tarzip \

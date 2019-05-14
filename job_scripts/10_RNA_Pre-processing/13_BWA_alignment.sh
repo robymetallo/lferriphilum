@@ -25,7 +25,7 @@ DB=$BWA_DB/$DB_PREFIX
 bwa index $REFERENCE -p $DB
 
 # Align PE
-bwa mem -t 4 \
+bwa mem -t $(nproc) \
         -v 3 \
         $DB \
         $IN_DIR/$FWD_READS \
@@ -39,14 +39,14 @@ samtools sort -@2 \
 
 
 # Align singletons
-bwa mem -t 4 \
+bwa mem -t $(nproc) \
         -v 3 \
         $DB \
         $IN_DIR/$SING_READS \
         2> $OUT_DIR"/singletons/BWA_singletons.log" | \
 samtools view -u | \
-samtools sort -@4 \
-              -m 1750M \
+samtools sort -@2 \
+              -m 1250M \
               -l 9 \
               -o $OUT_DIR"/singletons/LFerr_BWA_singletons.bam"
 
@@ -54,8 +54,8 @@ samtools merge $OUT_DIR/"LFerr_merged_for_trans_assembly.bam" \
                $OUT_DIR"/PE/*.bam" \
                $OUT_DIR"/singletons/*.bam"
 
-samtools sort -@4 \
-              -m 1750M \
+samtools sort -@$(nproc) \
+              -m 1250M \
               -l 9 \
               -o $OUT_DIR"LFerr_merged_for_trans_assembly_sorted.bam" \
               $OUT_DIR/"LFerr_merged_for_trans_assembly.bam"

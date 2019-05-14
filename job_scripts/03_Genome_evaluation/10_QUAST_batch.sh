@@ -29,7 +29,7 @@ for FILE in $IN_DIR/*.fasta; do
    fi
 
    /bin/python $HOME/Bioinformatics_Programs/quast-5.0.2/quast.py \
-               -t 4 \
+               -t $(nproc) \
                --glimmer \
                --circos \
                --rna-finding \

@@ -18,5 +18,5 @@ rnaQUAST.py -r $REF_GENOME \
             -1 $IN_DIR/$FWD_READS \
             -2 $IN_DIR/$REV_READS \
             -o $OUT_DIR \
-            --threads 4 \
+            --threads $(nproc) \
             2>&1 | tee $OUT_DIR/rnaQUAST_tee.log

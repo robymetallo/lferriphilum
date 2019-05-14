@@ -24,13 +24,13 @@ bwa index $REFERENCE -p $DB
 for FILE in $IN_DIR/*_singletons.fastq.gz;
 do
    BASE_NAME=`basename $FILE _singletons.fastq.gz`
-   bwa mem -t 4 \
+   bwa mem -t $(nproc) \
            -v 3 \
            $DB \
            $FILE 2> $OUT_DIR/$BASE_NAME"_singletons.log" | \
    samtools view -u | \
-   samtools sort -@4 \
-                 -m 2G \
+   samtools sort -@$(nproc) \
+                 -m 1250M \
                  -l 9 \
                  -o $OUT_DIR/$BASE_NAME"_singletons.bam"
 done;

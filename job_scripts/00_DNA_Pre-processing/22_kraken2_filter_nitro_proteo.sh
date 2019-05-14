@@ -14,7 +14,7 @@ mkdir -p $OUT_DIR
 
 # Kraken2 2.0.7-beta-bc14b13
 command time -v \
-kraken2 --threads 4 \
+kraken2 --threads $(nproc) \
         --db $MY_DB \
         --report $OUT_DIR/$REPORT_FILE \
         --output /dev/null \
@@ -36,7 +36,7 @@ UNCLASS_FILE="LFerr_human_on_unclass_unclassified.fastq"
 
 # Kraken2 2.0.7-beta-bc14b13
 command time -v \
-kraken2 --threads 4 \
+kraken2 --threads $(nproc) \
         --db $MY_DB \
         --report $WD/$REPORT_FILE \
         --output /dev/null \
