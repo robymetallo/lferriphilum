@@ -1,9 +1,10 @@
 import csv
+import csv
 from Bio import SeqIO
 
-prokka_fasta = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/prokka/20_LFerr_genome_assembly_final/LFerr.ffn"
-eggNOG_ann = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/eggNOG-mapper/LFerr.ffn.emapper.annotations"
-output_name = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/LFerr_merget.ffn"
+prokka_fasta = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/prokka_with_proteins/LFerr_with_proteins.ffn"
+eggNOG_ann = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/eggNOG-mapper_with_proteins/LFerr_Transcriptome_Assembly_Trinity_selected_clustered.fasta.emapper.annotations"
+output_name = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/LFerr_with_proteins_merged.ffn"
 
 
 def read_csv():
