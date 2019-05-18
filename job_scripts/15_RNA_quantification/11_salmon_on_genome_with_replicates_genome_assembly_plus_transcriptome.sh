@@ -1,10 +1,10 @@
 #!/bin/bash
 
 SALMON_IDX_DIR="$HOME/Bioinformatics_data/salmon_idx_salmon_idx_genome_assembly_plus_proteins"
-OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly/with_replicates/batch_colture"
+OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly_plus_proteins/with_replicates/batch_colture"
 IDX="LFerr_genome_assembly"
 TRANS_ANNOT="$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/LFerr_merged.ffn"
-READS_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk"
+READS_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_trimmed/"
 
 mkdir "$SALMON_IDX_DIR"
 mkdir "$OUT_DIR"
@@ -50,7 +50,7 @@ REV_READS="$READS_DIR/ERR2036630/ERR2036630_OK_2.fastq.gz\
  $READS_DIR/ERR2036629/ERR2036629_OK_2.fastq.gz\
  $READS_DIR/ERR2117288/ERR2117288_OK_2.fastq.gz"
 
-OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly/with_replicates/continuos_colture"
+OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly_plus_proteins/with_replicates/continuos_colture"
 mkdir -p $OUT_DIR
 
 command time -v \

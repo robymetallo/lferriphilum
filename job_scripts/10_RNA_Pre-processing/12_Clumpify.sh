@@ -1,7 +1,7 @@
 #!/bin/bash
 
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk"
-OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk/dedup"
+IN_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_trimmed/"
+OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_trimmed//dedup"
 
 FWD="_OK_1.fastq.gz"
 REV="_OK_2.fastq.gz"

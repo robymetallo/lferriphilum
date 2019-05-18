@@ -4,7 +4,7 @@ SALMON_IDX_DIR="$HOME/Bioinformatics_data/salmon_idx_salmon_idx_genome_assembly"
 OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly/without_replicates"
 IDX="LFerr_genome_assembly"
 TRANS_ANNOT="$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/LFerr_merged.ffn"
-READS_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/BBDuk"
+READS_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_trimmed/"
 
 mkdir "$SALMON_IDX_DIR"
 mkdir "$OUT_DIR"
