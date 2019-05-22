@@ -1,13 +1,13 @@
 #!/bin/bash
 
-SALMON_IDX_DIR="$HOME/Bioinformatics_data/salmon_idx_salmon_idx_genome_assembly"
+SALMON_IDX_DIR="$HOME/Bioinformatics_data/salmon_idx/salmon_idx_genome_assembly"
 OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly/with_replicates/batch_colture"
 IDX="LFerr_genome_assembly"
 TRANS_ANNOT="$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/LFerr_with_proteins_merged.ffn"
-READS_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_trimmed/"
+READS_DIR="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/00_trimmed"
 
-mkdir "$SALMON_IDX_DIR"
-mkdir "$OUT_DIR"
+mkdir -p "$SALMON_IDX_DIR"
+mkdir -p "$OUT_DIR"
 
 cd "$SALMON_IDX_DIR"
 
@@ -33,6 +33,7 @@ salmon quant -i "$SALMON_IDX_DIR/$IDX" \
              -2 $REV_READS \
              -p $(nproc) \
              --validateMappings \
+             --gcBias \
              -o "$OUT_DIR/LFerr_batch_salmon.out" \
              2>&1 | tee "$OUT_DIR/LFerr_batch_salmon_tee.log"
 
@@ -61,5 +62,6 @@ salmon quant -i "$SALMON_IDX_DIR/$IDX" \
              -2 $REV_READS \
              -p $(nproc) \
              --validateMappings \
+             --gcBias \
              -o "$OUT_DIR/LFerr_continuos_salmon.out" \
              2>&1 | tee "$OUT_DIR/LFerr_continuos_salmon_tee.log"

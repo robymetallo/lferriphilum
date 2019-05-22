@@ -5,9 +5,10 @@ data
 # slurm logs
 slurm-*.out
 
-# Varoius stuff
+# Various stuff
 .vscode/
 *.cmds
+*DeSeq2.nb.html
 
 # pictures
 *.jpeg

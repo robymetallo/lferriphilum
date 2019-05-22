@@ -1,0 +1,85 @@
+---
+title: "Differential expression analysis of LeptospirillumFerriphilum using DeSeq2"
+output: html_notebook
+---
+
+Load sample information into DeSeq2 data structure
+
+```{r}
+sample_layout <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/DeSeq2/sample_table"
+count_matrix <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly_plus_proteins/without_replicates/merged/LFerr_genome_assembly_plus_proteins_salmon_merged_rounded.tsv"
+
+cts <- as.matrix(read.csv(count_matrix, sep="\t", row.names="Name"))
+
+coldata <- read.csv(sample_layout, row.names=1, sep="\t")
+coldata <- coldata[,c("condition","type")]
+```
+
+
+```{r}
+library("DESeq2")
+
+dds <- DESeqDataSetFromMatrix(countData = cts,
+                              colData = coldata,
+                              design = ~ condition)
+dds
+```
+Filter out lowly expressed genes
+
+```{r}
+keep <- rowSums(counts(dds)) >= 10
+dds <- dds[keep,]
+```
+
+Specify which condition should be used as reference
+
+```{r}
+dds$condition <- relevel(dds$condition, ref = "Continuous")
+```
+
+Perform Differential expression analysis
+
+```{r}
+dds <- DESeq(dds)
+res <- results(dds)
+res
+```
+
+```{r}
+resultsNames(dds)
+resLFC <- lfcShrink(dds, coef="condition_Batch_vs_Continuous", type="apeglm")
+resLFC
+```
+
+Sort results based on p-value
+
+```{r}
+resOrdered <- res[order(res$pvalue),]
+summary(res)
+```
+
+Independent Hypothesis weighting
+
+```{r}
+library("IHW")
+resIHW <- results(dds, filterFun=ihw)
+summary(resIHW)
+```
+
+
+```{r}
+#plotMA(res, ylim=c(-2,2))
+plotMA(resLFC, ylim=c(-2,2))
+
+# Plot counts for gene which had the smallest p value from the results table created above
+plotCounts(dds, gene=which.min(res$padj), intgroup="condition")
+```
+
+Export results to CSV
+
+```{r}
+outdir <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/DeSeq2"
+outfile <- "LFerr_condition_Batch_vs_Continuous_DeSeq2_results.csv"
+write.csv(as.data.frame(resOrdered), 
+          file=paste(outdir, outfile, sep="/"))
+```

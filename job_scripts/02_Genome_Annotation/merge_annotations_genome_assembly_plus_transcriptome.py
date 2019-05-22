@@ -1,5 +1,4 @@
 import csv
-import csv
 from Bio import SeqIO
 
 prokka_fasta = "$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/prokka_with_proteins/LFerr_with_proteins.ffn"
