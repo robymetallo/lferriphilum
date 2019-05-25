@@ -1,11 +1,11 @@
 #!/bin/bash
 
 
-OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Trinity"
+OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Trinity/"
 
-BAM_FILE="$HOME/Bioinformatics_data/lferriphilum/analysis/RNA/01_processed_reads/04_Normalized/LFerr_RNA_normalized_sorted_for_trinity.bam"
+BAM_FILE="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Trinity_norm/merged/LFerr_merged_only_sorted.bam"
 
-TRINITY_HOME="$HOME/Bioinformatics_tools/Trinity-git/"
+TRINITY_HOME="$HOME/Bioinformatics_tools/Trinity-git"
 
 mkdir -p "$OUT_DIR"
 
@@ -16,7 +16,8 @@ command time -v \
                         --max_memory 16G \
                         --output "$OUT_DIR" \
                         --CPU $(nproc) \
-                        --bflyCalculateCPU \
+                        --bflyHeapSpaceMax 12G \
+                        --bflyGCThreads 4 \
                         2>&1 | tee "$OUT_DIR/Trinity_tee.log"
 
 
