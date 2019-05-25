@@ -10,10 +10,10 @@ LONG_ORFS="longest_orfs.pep"
 mkdir -p "$OUT_DIR"
 
 # command time -v \
-# "$TRANS_DECODER_HOME/./TransDecoder.LongOrfs" \
-#                        -t $TRANS_ASSEMBLY \
-#                        -O "$OUT_DIR" \
-#                        2>&1 | tee "$OUT_DIR/TransDecoder.LongOrfs_tee.log"
+"$TRANS_DECODER_HOME/./TransDecoder.LongOrfs" \
+                       -t $TRANS_ASSEMBLY \
+                       -O "$OUT_DIR" \
+                       2>&1 | tee "$OUT_DIR/TransDecoder.LongOrfs_tee.log"
 
 LONG_ORFS="$OUT_DIR/$LONG_ORFS"
 
@@ -22,19 +22,19 @@ PFAM_DB="$HOME/Bioinformatics_data/pfam/Pfam-A.hmm"
 PFAM_OUT="$OUT_DIR/pfam.domtblout"
 
 # # Look for conserved protein domains
-# mkdir -p $OUT_DIR
-# cd $(dirname $PFAM_DB)
+mkdir -p $OUT_DIR
+cd $(dirname $PFAM_DB)
 
-# command time -v \
-# hmmpress $PFAM_DB \
-#          2>&1 | tee "$(dirname $PFAM_DB)/hmmpress_pfam_tee.log"
+command time -v \
+hmmpress $PFAM_DB \
+         2>&1 | tee "$(dirname $PFAM_DB)/hmmpress_pfam_tee.log"
 
-# command time -v \
-# hmmscan --domtblout "$PFAM_OUT" \
-#         --cpu $(nproc) \
-#         $PFAM_DB \
-#         $LONG_ORFS \
-#         2>&1 | tee "$OUT_DIR/hmmscan_pfam_tee.log"
+command time -v \
+hmmscan --domtblout "$PFAM_OUT" \
+        --cpu $(nproc) \
+        $PFAM_DB \
+        $LONG_ORFS \
+        2>&1 | tee "$OUT_DIR/hmmscan_pfam_tee.log"
 
 
 # BLAST Against a curated database of proteins
@@ -48,31 +48,31 @@ ALIGNED="LFerr_diamond_aligned.blastp"
 UNALIGNED="LFerr_diamond_unaligned.blastp"
 BLAST_OUT="$OUT_DIR/blastp_diamond.outfmt6"
 
-# mkdir -p "$DB_DIR"
-# cd "$DB_DIR"
+mkdir -p "$DB_DIR"
+cd "$DB_DIR"
 
-# command time -v \
-# diamond makedb --in <(pigz -dc $REFERENCE) \
-#                --db "$DB_NAME" \
-#                2>&1 | tee "$DB_DIR/diamond_makedb_tee.log"
+command time -v \
+diamond makedb --in <(pigz -dc $REFERENCE) \
+               --db "$DB_NAME" \
+               2>&1 | tee "$DB_DIR/diamond_makedb_tee.log"
 
-# DB="$DB_DIR/$DB_NAME.dmnd"
+DB="$DB_DIR/$DB_NAME.dmnd"
 
-# command time -v \
-# diamond blastp \
-#         -o "$BLAST_OUT" \
-#         -f 6 \
-#         --header \
-#         --query "$QUERY" \
-#         --al "$OUT_DIR/$ALIGNED" \
-#         --un "$OUT_DIR/$UNALIGNED" \
-#         --min-orf 100 \
-#         --unal 1 \
-#         --max-target-seqs 1 \
-#         --sensitive \
-#         --masking 1 \
-#         --db "$DB" \
-#         2>&1 | tee "$OUT_DIR/diamond_tee.log"
+command time -v \
+diamond blastp \
+        -o "$BLAST_OUT" \
+        -f 6 \
+        --header \
+        --query "$QUERY" \
+        --al "$OUT_DIR/$ALIGNED" \
+        --un "$OUT_DIR/$UNALIGNED" \
+        --min-orf 100 \
+        --unal 1 \
+        --max-target-seqs 1 \
+        --sensitive \
+        --masking 1 \
+        --db "$DB" \
+        2>&1 | tee "$OUT_DIR/diamond_tee.log"
 
 # Drop first 3 lines
 sed -i '1,3d' $BLAST_OUT
