@@ -7,8 +7,8 @@ Load sample information into DeSeq2 data structure
 
 ```{r}
 sample_layout <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/DeSeq2/sample_table"
-count_matrix <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly_plus_proteins/without_replicates/merged/LFerr_genome_assembly_plus_proteins_salmon_merged_rounded.tsv"
-
+count_matrix <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final/LFerr_genome_assembly_plus_proteins_salmon_merged_rounded.csv"
+  
 cts <- as.matrix(read.csv(count_matrix, sep="\t", row.names="Name"))
 
 coldata <- read.csv(sample_layout, row.names=1, sep="\t")
@@ -22,7 +22,6 @@ library("DESeq2")
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
                               design = ~ condition)
-dds
 ```
 Filter out lowly expressed genes
 
@@ -48,6 +47,7 @@ res
 ```{r}
 resultsNames(dds)
 resLFC <- lfcShrink(dds, coef="condition_Batch_vs_Continuous", type="apeglm")
+# resLFC <- lfcShrink(dds, coef="condition_Continuous_vs_Batch", type="apeglm")
 resLFC
 ```
 
@@ -68,12 +68,45 @@ summary(resIHW)
 
 
 ```{r}
-#plotMA(res, ylim=c(-2,2))
-plotMA(resLFC, ylim=c(-2,2))
+plotMA(res, ylim=c(-4,4))
+plotMA(resLFC, ylim=c(-4,4))
 
 # Plot counts for gene which had the smallest p value from the results table created above
 plotCounts(dds, gene=which.min(res$padj), intgroup="condition")
 ```
+
+```{r}
+library("pheatmap")
+library("vsn")
+library("matrixStats")
+
+#vsd <- vst(dds, blind=F)
+rld <- rlog(dds, blind=F)
+#ntd <- normTransform(dds)
+topVarGenes <- head(order(rowVars(assay(rld)), decreasing=T), 100)
+#head(assay(vsd), 3)
+#head(assay(rld), 20)
+topVarGenes
+matrix <- assay(rld)[ topVarGenes ]
+matrix <- matrix - rowMeans(matrix)
+#annotation_data <- as.data.frame(colData(rld)[c("Continuous","Batch")])
+pheatmap(matrix)
+```
+
+PCA Plot
+
+```{r}
+plotPCA(vsd, intgroup=c("condition", "type"))
+```
+
+```{r}
+select <- order(rowMeans(counts(dds, normalized=TRUE)),
+                decreasing=TRUE)[1:20]
+df <- as.data.frame(colData(dds)[,c("condition","type")])
+pheatmap(assay(rld)[select,], cluster_rows=FALSE, show_rownames=FALSE,
+         cluster_cols=FALSE, annotation_col=df)
+```
+
 
 Export results to CSV
 
@@ -82,4 +115,17 @@ outdir <- "$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/DeSeq2"
 outfile <- "LFerr_condition_Batch_vs_Continuous_DeSeq2_results.csv"
 write.csv(as.data.frame(resOrdered), 
           file=paste(outdir, outfile, sep="/"))
+```
+
+```{r}
+ntd <- normTransform(dds)
+library("vsn")
+meanSdPlot(assay(ntd))
+```
+
+
+Convert DSeq2 output to dataframe
+
+```{r}
+#deseq_df <- makeDESeqDF(resOrdered)
 ```

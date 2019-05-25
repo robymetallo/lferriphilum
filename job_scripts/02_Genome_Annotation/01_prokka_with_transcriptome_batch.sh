@@ -7,16 +7,12 @@ OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/DNA_data/prokka_with_protei
 # --usegenus   Use genus-specific BLAST databases
 # --rfam       Enable searching for ncRNAs with Infernal+Rfam
 PREFIX="LFerr_with_proteins"
-PROTEINS="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/TransDecoder/select_best_ORFs/LFerr_Transcriptome_Assembly_Trinity.fasta.transdecoder.cds"
+PROTEINS="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/cd-hit/LFerr_Transcriptome_Assembly_Trinity_selected_clustered.fasta"
 
-# export PATH=$PATH:$HOME/GitHub/prokka/bin
-# export PATH=$PATH:$HOME/Bioinformatics_tools/signalp-5.0/bin
 
 # Prokka v1.13.3
 prokka --cpus $(nproc) \
        --gram neg \
-       --genus Leptospirillum \
-       --usegenus \
        --rfam \
        --force \
        --proteins $PROTEINS \

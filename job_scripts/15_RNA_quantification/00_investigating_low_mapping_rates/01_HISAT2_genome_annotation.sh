@@ -43,4 +43,4 @@ hisat2 --no-spliced-alignment \
        -x $DB_DIR/$DB_PREFIX \
        -1 $FWD_READS \
        -2 $REV_READS \
-       1> /dev/null | tee $OUT_DIR"/histat2_annotation_coverage.summary.log"
+       > /dev/null | tee $OUT_DIR"/histat2_annotation_coverage.summary.log"

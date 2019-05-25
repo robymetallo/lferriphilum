@@ -1,9 +1,9 @@
 #!/bin/bash
 
-IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly_plus_proteins/without_replicates"
-OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/genome_assembly_plus_proteins/without_replicates/merged"
+IN_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final"
+OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final"
 
-IN_FILES=`find "$IN_DIR" -type d -wholename '*_salmon.out' | tr '\n' ' '~`
+IN_FILES=`find "$IN_DIR" -type d -wholename '*_salmon' | tr '\n' ' '~`
 OUT_FILE="LFerr_genome_assembly_plus_proteins_salmon_merged.tsv"
 
 mkdir -p $OUT_DIR

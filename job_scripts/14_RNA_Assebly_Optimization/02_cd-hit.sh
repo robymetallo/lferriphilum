@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TRANSCRIPTS="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/TransDecoder/select_best_ORFs/LFerr_Transcriptome_Assembly_Trinity.fasta.transdecoder.cds"
+TRANSCRIPTS="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/TransDecoder/Trinity_second_run/Trinity_transctiptome_assembly_sith_merged_reads.fasta.transdecoder.cds"
 OUT_DIR="$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/cd-hit"
 OUT="LFerr_Transcriptome_Assembly_Trinity_selected_clustered.fasta"
 

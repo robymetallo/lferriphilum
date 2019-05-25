@@ -14,8 +14,8 @@ cd "$SALMON_IDX_DIR"
 salmon index -t "$TRANS_ANNOT" \
              -i "$IDX" \
              -k 31
-
-FWD_READS=`find "$READS_DIR" -wholename '*/ERR*/*OK_1.fastq.gz' | tr '\n' ' '~`
+`find "$READS_DIR" -wholename '*/ERR*/*OK_1.fastq.gz' | tr '\n' ' '~`
+FWD_READS=
 REV_READS=`find "$READS_DIR" -wholename '*/ERR*/*OK_2.fastq.gz' | tr '\n' ' '~`
 
 

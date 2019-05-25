@@ -15,27 +15,27 @@ salmon index -t "$TRANS_ANNOT" \
              -i "$IDX" \
              -k 31
 
-FWD_READS="$READS_DIR/ERR2036631/ERR2036631_OK_1.fastq.gz\
- $READS_DIR/ERR2117290/ERR2117290_OK_1.fastq.gz\
- $READS_DIR/ERR2036632/ERR2036632_OK_1.fastq.gz\
- $READS_DIR/ERR2117291/ERR2117291_OK_1.fastq.gz"
+# FWD_READS="$READS_DIR/ERR2036631/ERR2036631_OK_1.fastq.gz\
+#  $READS_DIR/ERR2117290/ERR2117290_OK_1.fastq.gz\
+#  $READS_DIR/ERR2036632/ERR2036632_OK_1.fastq.gz\
+#  $READS_DIR/ERR2117291/ERR2117291_OK_1.fastq.gz"
 
-REV_READS="$READS_DIR/ERR2036631/ERR2036631_OK_2.fastq.gz\
- $READS_DIR/ERR2117290/ERR2117290_OK_2.fastq.gz\
- $READS_DIR/ERR2036632/ERR2036632_OK_2.fastq.gz\
- $READS_DIR/ERR2117291/ERR2117291_OK_2.fastq.gz"
+# REV_READS="$READS_DIR/ERR2036631/ERR2036631_OK_2.fastq.gz\
+#  $READS_DIR/ERR2117290/ERR2117290_OK_2.fastq.gz\
+#  $READS_DIR/ERR2036632/ERR2036632_OK_2.fastq.gz\
+#  $READS_DIR/ERR2117291/ERR2117291_OK_2.fastq.gz"
 
 
-command time -v \
-salmon quant -i "$SALMON_IDX_DIR/$IDX" \
-             -l A \
-             -1 $FWD_READS \
-             -2 $REV_READS \
-             -p $(nproc) \
-             --validateMappings \
-             --gcBias \
-             -o "$OUT_DIR/LFerr_batch_salmon.out" \
-             2>&1 | tee "$OUT_DIR/LFerr_batch_salmon_tee.log"
+# command time -v \
+# salmon quant -i "$SALMON_IDX_DIR/$IDX" \
+#              -l A \
+#              -1 $FWD_READS \
+#              -2 $REV_READS \
+#              -p $(nproc) \
+#              --validateMappings \
+#              --gcBias \
+#              -o "$OUT_DIR/LFerr_batch_salmon.out" \
+#              2>&1 | tee "$OUT_DIR/LFerr_batch_salmon_tee.log"
 
 
 FWD_READS="$READS_DIR/ERR2036630/ERR2036630_OK_1.fastq.gz\
