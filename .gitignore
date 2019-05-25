@@ -8,7 +8,7 @@ slurm-*.out
 # Various stuff
 .vscode/
 *.cmds
-*DeSeq2.nb.html
+*.nb.html
 
 # pictures
 *.jpeg

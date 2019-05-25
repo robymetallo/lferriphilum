@@ -9,41 +9,23 @@ Load sample information into edgeR
 library(edgeR)
 library(stringr)
 
-count_csv <- read.csv("$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final/LFerr_genome_assembly_plus_proteins_salmon_merged_rounded.csv", sep="\t", row.names="Name")
+count_csv <- read.csv("$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final/LFerr_genome_assembly_plus_proteins_salmon_merged_renamed.tsv", sep="\t", row.names="Name")
 count_matrix <- as.matrix(count_csv)
 
-cc <- rep('NULL', 15)
-cc[c(1, 5, 15)] <- 'character'
+tpm_matrix  <- read.csv("$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final/LFerr_genome_assembly_plus_proteins_salmon_merged_TPM_renamed.tsv", sep="\t", row.names="Name")
 
-annotation <- read.csv("$HOME/Bioinformatics_data/lferriphilum/analysis/DNA/04_genome_annotation/eggNOG-mapper/LFerr.ffn.emapper.annotations", sep="\t", colClasses=cc)
-
-i = 2575
-ann <- vector()
-while (i > 0) {
-  i <- i-1
-  gn <- paste("PKGNLADN_", str_pad(i, 5, pad = "0"), sep="")
-  if gn %in% annotation {
-    idx <- match(gn, annotation)
-    if annotation[idx][2] != "" {
-      append(ann, annotation[idx][2])
-    }
-  } else {
-    append(ann, gn)
-  }
-}
-
+#group <- c("Batch", "Batch", "Continuous", "Continuous", "Continuous")
 group <- c("Continuous", "Continuous", "Continuous", "Batch", "Batch")
-design <- model.matrix( ~ group)
 
 de <- DGEList(counts=count_matrix, group=group)
+
+design <- model.matrix( ~ group)
 
 keep <- filterByExpr(de)
 de <- de[keep, , keep.lib.sizes=F]
 
 de <- calcNormFactors(de)
 de_bak <- de
-de
-ann
 ```
 
 
@@ -76,7 +58,7 @@ de <- estimateDisp(de, design, robust=T)
 fit <- glmFit(de, design)
 lrt <- glmLRT(fit)
 
-topDE <- topTags(lrt, n=15L)
+topDE <- topTags(lrt, n=17L)
 topDE
 ```
 
@@ -90,27 +72,19 @@ plotMD(lrt)
 library(pheatmap)
 
 # 01480 and 01549 are ribosomes and skew the whole plot, I'm gonna remove them
-deList <- c("PKGNLADN_00968", "PKGNLADN_00970", "PKGNLADN_01008", "PKGNLADN_00463", "PKGNLADN_00244", "PKGNLADN_02086", "PKGNLADN_02392", "PKGNLADN_01009", "PKGNLADN_00243", "PKGNLADN_01508", "PKGNLADN_00966", "PKGNLADN_00245", "PKGNLADN_02088", "PKGNLADN_02386", "PKGNLADN_02530", "PKGNLADN_01427", "PKGNLADN_00775", "PKGNLADN_00969")
+rRNA <- list("PKGNLADN_01480", "PKGNLADN_01549")
 
 
-top <- count_matrix[topDE[,0],]
+topDE <- topDE[!(row.names(topDE) %in% rRNA), ]
+
+topDE <- topDE[topDE != rRNA]
+
+top <- tpm_matrix[row.names(topDE),]
 top_log <- log(top)
-pheatmap(top_log, display_numbers = T)
-top
-top_log
+pheatmap(top_log, display_numbers = T, cluster_cols=F)
+#top
+#top_log
 ```
-
-23S ribosomal RNA
-16S ribosomal RNA
-APSA: Fumarate reductase succinate dehydrogenase flavoprotein domain protein
-BMUL_1008: Metallophosphoesterase
-hypothetical protein
-FLIC: flagellin domain protein
-Flagellar biosynthesis protein FlhF; eggNOG[FLHF]: GTP-binding signal recognition particle
-Prokka: Cobalt-zinc-cadmium resistance protein CzcA; eggNOG[]: Heavy metal efflux pump, CzcA
-PKGNLADN_00968 Prokka: Cation efflux system protein CusA; eggNOG[CUSA]: Heavy metal efflux pump, CzcA
-hypothetical protein; eggNOG[]: Outer membrane efflux protein
-
 
 
 
