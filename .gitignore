@@ -9,6 +9,7 @@ slurm-*.out
 .vscode/
 *.cmds
 *.nb.html
+.Rhistory
 
 # pictures
 *.jpeg
