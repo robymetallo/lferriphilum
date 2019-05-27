@@ -3,87 +3,85 @@ title: "Differential expression analysis of LeptospirillumFerriphilum using DeSe
 output: html_notebook
 ---
 
-Load sample information into edgeR
+### Load sample information into edgeR
 
 ```{r}
 library(edgeR)
-library(stringr)
 
 count_csv <- read.csv("$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final/LFerr_genome_assembly_plus_proteins_salmon_merged_renamed.tsv", sep="\t", row.names="Name")
 count_matrix <- as.matrix(count_csv)
 
 tpm_matrix  <- read.csv("$HOME/Bioinformatics_data/lferriphilum/data/RNA_data/Salmon/final/LFerr_genome_assembly_plus_proteins_salmon_merged_TPM_renamed.tsv", sep="\t", row.names="Name")
 
-#group <- c("Batch", "Batch", "Continuous", "Continuous", "Continuous")
 group <- c("Continuous", "Continuous", "Continuous", "Batch", "Batch")
 
 de <- DGEList(counts=count_matrix, group=group)
-
 design <- model.matrix( ~ group)
+```
 
+### Preprocess data and estimate dispersion (quantile-adjusted conditional maximum likelihood qCML)
+
+``` {r}
 keep <- filterByExpr(de)
 de <- de[keep, , keep.lib.sizes=F]
 
 de <- calcNormFactors(de)
-de_bak <- de
+
+de <- estimateDisp(de, design, robust=T)
 ```
 
+### Plot BCV
 
-Estimate dispersion (quantile-adjusted conditional maximum likelihood qCML)
-
-```{r}
-
-de <- estimateDisp(de)
-
-```
-
-BCV is the Viological Coefficient of Variation. The meaning is that the expression values vary up and down by BCV% between replicates.
-Mathematically, BCV corresponds to the square root of the negative binomial dispersion for a gene across replicate samples. THis can be interpreted as the proportion of expression attributable to variability.
-
-```{r}
+BCV is the Viological Coefficient of Variation. This plot shows how expression values varies (%BCV) up and down across replocates.
+Mathematically, BCV corresponds to the square root of the negative binomial dispersion for a gene across replicate samples. BCV can be used as a measurement of the proportion of gene expression attributable to variability.
+```{r dpi=300, fig.width=8, fig.height=6}
 logcpm <- cpm(de, log=TRUE)
 plotMDS(logcpm)
-plotBCV(de)
+plotBCV(de, main="Batch VS Continuous BCV")
 ```
 
-Test for differentially expressed genes
+### Test for differentially expressed genes using generalized linear models (GLM)
 
 ```{r}
-et <- exactTest(de)
-topTags(et)
-```
-
-```{r}
-de <- estimateDisp(de, design, robust=T)
 fit <- glmFit(de, design)
 lrt <- glmLRT(fit)
 
 topDE <- topTags(lrt, n=17L)
+# 01480 and 01549 are rRNAs and skew the results of the next steps
+rRNA <- list("PKGNLADN_01480", "PKGNLADN_01549")
+topDE <- topDE[!(row.names(topDE) %in% rRNA), ]
+
 topDE
 ```
 
 
 
-```{r}
-plotMD(lrt)
+```{r dpi=300, fig.width=8, fig.height=6}
+plotMD(lrt, main="Log-fold change Batch VS Continuous")
 ```
 
-```{r}
+```{r dpi=300}
 library(pheatmap)
-
-# 01480 and 01549 are ribosomes and skew the whole plot, I'm gonna remove them
-rRNA <- list("PKGNLADN_01480", "PKGNLADN_01549")
-
-
-topDE <- topDE[!(row.names(topDE) %in% rRNA), ]
-
-topDE <- topDE[topDE != rRNA]
+library(RColorBrewer)
 
 top <- tpm_matrix[row.names(topDE),]
-top_log <- log(top)
-pheatmap(top_log, display_numbers = T, cluster_cols=F)
-#top
-#top_log
+
+breaksList = seq(-1, 6.5, by = 0.5)
+
+pheatmap(mat=log(top),
+        display_numbers=T,
+        cluster_cols=F,
+        color=colorRampPalette(rev(brewer.pal(n = 7, name = "RdYlBu")))(length(breaksList)),
+        breaks=breaksList,
+        fontsize=22,
+        fontsize_number=20,
+        number_color="black",
+        angle_col=45,
+        border_color=NA,
+        main="LFerr 15 most significant DE genes",
+        width=10,
+        height=8)
+top
 ```
 
 
